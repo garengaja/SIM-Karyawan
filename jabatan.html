@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Jabatan</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="container mt-4">
+        <h2>Data Jabatan</h2>
+        <p>Halaman ini untuk mengelola data jabatan.</p>
+
+        <form id="jabatanForm" class="mb-4">
+            <div class="mb-3">
+                <label for="namaJabatan" class="form-label">Nama Jabatan</label>
+                <input type="text" class="form-control" id="namaJabatan" required>
+            </div>
+            <div class="mb-3">
+                <label for="deskripsiJabatan" class="form-label">Deskripsi Jabatan</label>
+                <textarea class="form-control" id="deskripsiJabatan" rows="3" required></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary">Tambah Jabatan</button>
+        </form>
+
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>No</th>
+                    <th>Nama Jabatan</th>
+                    <th>Deskripsi</th>
+                </tr>
+            </thead>
+            <tbody id="jabatanTable">
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        const jabatanForm = document.getElementById("jabatanForm");
+        const jabatanTable = document.getElementById("jabatanTable");
+
+        function loadData() {
+            jabatanTable.innerHTML = "";
+            let jabatanData = JSON.parse(localStorage.getItem("jabatanData")) || [];
+            jabatanData.forEach((jabatan, index) => {
+                let row = `<tr>
+                    <td>${index + 1}</td>
+                    <td>${jabatan.nama}</td>
+                    <td>${jabatan.deskripsi}</td>
+                </tr>`;
+                jabatanTable.innerHTML += row;
+            });
+        }
+
+        function saveData() {
+            let jabatanData = JSON.parse(localStorage.getItem("jabatanData")) || [];
+            const nama = document.getElementById("namaJabatan").value;
+            const deskripsi = document.getElementById("deskripsiJabatan").value;
+            jabatanData.push({ nama, deskripsi });
+            localStorage.setItem("jabatanData", JSON.stringify(jabatanData));
+            loadData();
+        }
+
+        jabatanForm.addEventListener("submit", function(e) {
+            e.preventDefault();
+            saveData();
+            jabatanForm.reset();
+        });
+
+        loadData();
+    </script>
+</body>
+</html>
